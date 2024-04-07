@@ -23,7 +23,6 @@ mod file;
 mod lang_items;
 mod logging;
 mod mem;
-mod sbi;
 mod sync;
 mod syscall;
 mod task;
@@ -54,7 +53,7 @@ pub fn rust_main() {
     executor::init();
     executor::run_until_complete();
 
-    sbi::shutdown();
+    sbi_rt::system_reset(sbi_rt::Shutdown, sbi_rt::NoReason);
 }
 
 /// Initializes the `.bss` section with zeros.

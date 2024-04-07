@@ -2,7 +2,7 @@
 
 use riscv::register::{sie, time};
 
-use crate::{constant::CLOCK_FREQ, sbi};
+use crate::constant::CLOCK_FREQ;
 
 /// The number of timer ticks per second.
 const TICK_PER_SEC: usize = 100;
@@ -14,7 +14,7 @@ pub fn get_time() -> usize {
 
 /// Sets the timer interrupt trigger for the next timer tick.
 pub fn set_trigger() {
-    sbi::set_timer(time::read() + CLOCK_FREQ / TICK_PER_SEC);
+    sbi_rt::set_timer((time::read() + CLOCK_FREQ / TICK_PER_SEC) as u64);
 }
 
 /// Enables the system timer interrupt.

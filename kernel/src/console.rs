@@ -3,16 +3,14 @@
 
 use core::fmt::{self, Write};
 
-use crate::sbi;
-
-/// The `Console` struct implements the [Write] trait, which invokes the [sbi::console_putchar]
-/// function.
+/// The `Console` struct implements the [Write] trait, which invokes the
+/// `sbi_rt::console_write_byte` function.
 struct Console;
 
 impl Write for Console {
     fn write_str(&mut self, string: &str) -> fmt::Result {
         for char in string.bytes() {
-            sbi::console_putchar(char.into());
+            sbi_rt::console_write_byte(char);
         }
         Ok(())
     }
