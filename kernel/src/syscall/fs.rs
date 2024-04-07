@@ -3,12 +3,12 @@
 use core::str;
 
 use log::error;
+use sbi_rt::Physical;
 
 use crate::{
     executor::{yield_now, ControlFlow},
     mem::UserPtr,
     print,
-    sbi,
     syscall::SystemCall,
 };
 
@@ -25,10 +25,11 @@ impl SystemCall<'_> {
     ) -> (isize, ControlFlow) {
         match fd {
             STDIN => {
-                let mut char;
+                let mut char = 0u8;
                 loop {
-                    char = sbi::console_getchar();
-                    if char == 0 {
+                    let bytes_read =
+                        sbi_rt::console_read(Physical::new(1, &mut char as *mut u8 as usize, 0));
+                    if bytes_read == sbi_rt::SbiRet::success(0) {
                         yield_now().await;
                     } else {
                         break;
